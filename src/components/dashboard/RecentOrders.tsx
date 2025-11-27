@@ -111,7 +111,7 @@ const RecentOrders = () => {
                         dataSource={data}
                         pagination={false}
                         size="small"
-                        className="no-border-table"
+                        className="no-border-table overflow-x-auto"
                   />
             </Card>
       );

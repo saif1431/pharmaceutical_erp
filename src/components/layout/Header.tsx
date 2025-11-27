@@ -1,88 +1,82 @@
 'use client';
 
 import React from 'react';
-import { Layout, Avatar, Badge, Dropdown, Input, theme, Button } from 'antd';
-import { Bell, Search, User, LogOut, Settings, Menu as MenuIcon } from 'lucide-react';
+import { Layout, Input, Button, Avatar, Dropdown } from 'antd';
+import { Search, Bell, User, Settings, LogOut, Menu } from 'lucide-react';
 import type { MenuProps } from 'antd';
 
 const { Header: AntHeader } = Layout;
 
-const Header = () => {
-      const {
-            token: { colorBgContainer, colorBorderSecondary },
-      } = theme.useToken();
+interface HeaderProps {
+      onMenuClick?: () => void;
+}
 
-      const userMenu: MenuProps['items'] = [
+const Header = ({ onMenuClick }: HeaderProps) => {
+      const userMenuItems: MenuProps['items'] = [
             {
                   key: 'profile',
-                  label: 'My Profile',
                   icon: <User size={16} />,
+                  label: 'Profile',
             },
             {
                   key: 'settings',
-                  label: 'Settings',
                   icon: <Settings size={16} />,
+                  label: 'Settings',
             },
             {
                   type: 'divider',
             },
             {
                   key: 'logout',
-                  label: 'Logout',
                   icon: <LogOut size={16} />,
+                  label: 'Logout',
                   danger: true,
             },
       ];
 
       return (
-            <AntHeader
-                  style={{
-                        padding: '0 24px',
-                        background: colorBgContainer,
-                        position: 'sticky',
-                        top: 0,
-                        zIndex: 40,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        borderBottom: `1px solid ${colorBorderSecondary}`,
-                        height: 64,
-                  }}
-                  className="shadow-sm"
-            >
+            <AntHeader style={{ padding: '.6rem 2rem' }} className="bg-white border-b border-slate-200 flex items-center justify-between shadow-sm sticky top-0 z-40">
                   <div className="flex items-center gap-4 flex-1">
-                        {/* Mobile menu trigger could go here */}
-                        <div className="hidden md:block w-full max-w-md">
-                              <Input
-                                    placeholder="Search for orders, items, or suppliers..."
-                                    prefix={<Search size={16} className="text-slate-400" />}
-                                    className="rounded-full bg-slate-50 border-slate-200 hover:bg-white focus:bg-white transition-all"
-                                    variant="filled"
+                        {/* Mobile Menu Button */}
+                        <div className="lg:hidden block">
+                              <Button
+                                    type="text"
+                                    icon={<Menu size={20} />}
+                                    onClick={onMenuClick}
+                                    className=""
                               />
                         </div>
+
+                        {/* Search Bar */}
+                        <Input
+                              placeholder="Search..."
+                              prefix={<Search size={16} className="text-slate-400" />}
+                              className="max-w-md hidden sm:block"
+                              size="middle"
+                        />
                   </div>
 
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-3">
+                        {/* Notifications */}
                         <Button
                               type="text"
-                              shape="circle"
-                              icon={<Bell size={20} className="text-slate-600" />}
-                              className="flex items-center justify-center"
+                              icon={<Bell size={20} />}
+                              className="relative"
                         />
 
-                        <div className="h-8 w-[1px] bg-slate-200 mx-2 hidden sm:block"></div>
-
-                        <Dropdown menu={{ items: userMenu }} placement="bottomRight" arrow>
-                              <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                                    <div className="text-right hidden sm:block">
-                                          <div className="text-sm font-semibold text-slate-700">Dr. Alex Smith</div>
-                                          <div className="text-xs text-slate-500">Production Manager</div>
-                                    </div>
+                        {/* User Profile */}
+                        <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" trigger={['click']}>
+                              <div className="flex items-center gap-2 cursor-pointer hover:bg-slate-50 px-3 py-2 rounded-lg transition-colors">
                                     <Avatar
-                                          size="large"
-                                          className="bg-emerald-100 text-emerald-600 border border-emerald-200"
-                                          icon={<User size={20} />}
-                                    />
+                                          size={32}
+                                          className="bg-cyan-100 text-cyan-600 border border-cyan-200"
+                                    >
+                                          <User size={16} />
+                                    </Avatar>
+                                    <div className="hidden md:block text-left">
+                                          <div className="text-sm font-medium text-slate-700">John Doe</div>
+                                          <div className="text-xs text-slate-500">Administrator</div>
+                                    </div>
                               </div>
                         </Dropdown>
                   </div>

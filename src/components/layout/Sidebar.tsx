@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme, Drawer } from 'antd';
 import {
       LayoutDashboard,
       ShoppingCart,
@@ -18,7 +18,12 @@ import Image from 'next/image';
 
 const { Sider } = Layout;
 
-const Sidebar = () => {
+interface SidebarProps {
+      mobileOpen: boolean;
+      setMobileOpen: (open: boolean) => void;
+}
+
+const Sidebar = ({ mobileOpen, setMobileOpen }: SidebarProps) => {
       const [collapsed, setCollapsed] = useState(false);
       const pathname = usePathname();
       const {
@@ -29,7 +34,7 @@ const Sidebar = () => {
             {
                   key: '/',
                   icon: <LayoutDashboard size={20} />,
-                  label: <Link href="/">Dashboard</Link>,
+                  label: <Link href="/" onClick={() => setMobileOpen(false)}>Dashboard</Link>,
             },
             {
                   key: '/procurement',
@@ -38,15 +43,15 @@ const Sidebar = () => {
                   children: [
                         {
                               key: '/procurement/suppliers-import',
-                              label: <Link href="/procurement/suppliers-import">Suppliers (Import)</Link>,
+                              label: <Link href="/procurement/suppliers-import" onClick={() => setMobileOpen(false)}>Suppliers (Import)</Link>,
                         },
                         {
                               key: '/procurement/suppliers-local',
-                              label: <Link href="/procurement/suppliers-local">Suppliers (Local)</Link>,
+                              label: <Link href="/procurement/suppliers-local" onClick={() => setMobileOpen(false)}>Suppliers (Local)</Link>,
                         },
                         {
                               key: '/procurement/orders',
-                              label: <Link href="/procurement/orders">Purchase Orders</Link>,
+                              label: <Link href="/procurement/orders" onClick={() => setMobileOpen(false)}>Purchase Orders</Link>,
                         },
                   ],
             },
@@ -57,14 +62,14 @@ const Sidebar = () => {
                   children: [
                         {
                               key: '/production/batches',
-                              label: <Link href="/production/batches">Batch Management</Link>,
+                              label: <Link href="/production/batches" onClick={() => setMobileOpen(false)}>Batch Management</Link>,
                         },
                   ],
             },
             {
                   key: '/inventory',
                   icon: <Package size={20} />,
-                  label: <Link href="/inventory">Inventory</Link>,
+                  label: <Link href="/inventory" onClick={() => setMobileOpen(false)}>Inventory</Link>,
             },
             {
                   key: '/sales',
@@ -88,7 +93,6 @@ const Sidebar = () => {
             },
       ];
 
-      // Determine selected keys based on current path
       const getSelectedKeys = () => {
             if (pathname === '/') return ['/'];
             return [pathname];
@@ -100,19 +104,8 @@ const Sidebar = () => {
             return [];
       };
 
-      return (
-            <Sider
-                  collapsible
-                  collapsed={collapsed}
-                  onCollapse={(value) => setCollapsed(value)}
-                  width={260}
-                  className="border-r border-slate-200 h-screen sticky top-0 left-0 z-50 shadow-sm"
-                  theme="light"
-                  style={{
-                        background: colorBgContainer,
-                        borderColor: colorBorderSecondary,
-                  }}
-            >
+      const sidebarContent = (
+            <>
                   <div className="flex items-center justify-center h-30 border-b border-slate-100 mb-4 px-4">
                         {!collapsed ? (
                               <Image
@@ -125,7 +118,7 @@ const Sidebar = () => {
                               />
                         ) : (
                               <Image
-                                    src="/logo.png"
+                                    src="/favicon.png"
                                     alt="VD"
                                     width={32}
                                     height={32}
@@ -141,10 +134,44 @@ const Sidebar = () => {
                         defaultOpenKeys={getOpenKeys()}
                         selectedKeys={getSelectedKeys()}
                         items={menuItems}
-                        className="border-none font-medium"
+                        className="border-none  font-medium"
                         style={{ background: 'transparent' }}
                   />
-            </Sider>
+            </>
+      );
+
+      return (
+            <>
+                  {/* Desktop Sidebar */}
+                  <Sider
+                        collapsible
+                        collapsed={collapsed}
+                        onCollapse={(value) => setCollapsed(value)}
+                        width={260}
+                        className="hidden lg:block border-r border-slate-200 h-screen sticky top-0 left-0 shadow-sm  "
+                        theme="light"
+                        style={{
+                              background: colorBgContainer,
+                              borderColor: colorBorderSecondary,
+                        }}
+                  >
+                        {sidebarContent}
+                  </Sider>
+
+                  {/* Mobile Drawer */}
+                  <Drawer
+                        placement="left"
+                        onClose={() => setMobileOpen(false)}
+                        open={mobileOpen}
+                        className="lg:hidden"
+                        size="default"
+                        styles={{
+                              body: { padding: '1rem', background: colorBgContainer },
+                        }}
+                  >
+                        {sidebarContent}
+                  </Drawer>
+            </>
       );
 };
 

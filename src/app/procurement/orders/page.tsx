@@ -237,6 +237,7 @@ export default function PurchaseOrdersPage() {
                   </div>
 
                   <DataTable
+                        className='overflow-x-auto'
                         tableTitle="Purchase Orders"
                         columns={columns}
                         dataSource={data}

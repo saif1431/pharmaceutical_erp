@@ -208,6 +208,7 @@ export default function SuppliersImportPage() {
                   </div>
 
                   <DataTable
+                  className='overflow-x-auto'
                         tableTitle="Import Suppliers"
                         columns={columns}
                         dataSource={data}

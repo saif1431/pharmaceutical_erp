@@ -208,6 +208,7 @@ export default function SuppliersLocalPage() {
                   </div>
 
                   <DataTable
+                  className='overflow-x-auto'
                         tableTitle="Local Suppliers"
                         columns={columns}
                         dataSource={data}
